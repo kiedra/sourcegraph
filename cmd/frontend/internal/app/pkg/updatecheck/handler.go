@@ -160,6 +160,7 @@ type pingRequest struct {
 	HasExtURL            bool             `json:"hasExtURL"`
 	UniqueUsers          int32            `json:"u"`
 	Activity             *json.RawMessage `json:"act"`
+	CodeIntelUsage       *json.RawMessage `json:"codeIntelUsage"`
 	InitialAdminEmail    string           `json:"initAdmin"`
 	TotalUsers           int32            `json:"totalUsers"`
 	HasRepos             bool             `json:"repos"`
@@ -243,6 +244,7 @@ type pingPayload struct {
 	HasUpdate            bool             `json:"has_update"`
 	UniqueUsersToday     int32            `json:"unique_users_today"`
 	SiteActivity         *json.RawMessage `json:"site_activity"`
+	CodeIntelUsage       *json.RawMessage `json:"code_intel_usage"`
 	InstallerEmail       string           `json:"installer_email"`
 	AuthProviders        []string         `json:"auth_providers"`
 	ExtServices          []string         `json:"ext_services"`
@@ -272,6 +274,7 @@ func logPing(r *http.Request, pr *pingRequest, hasUpdate bool) {
 		HasUpdate:            hasUpdate,
 		UniqueUsersToday:     pr.UniqueUsers,
 		SiteActivity:         pr.Activity,
+		CodeIntelUsage:       pr.CodeIntelUsage,
 		InstallerEmail:       pr.InitialAdminEmail,
 		AuthProviders:        pr.AuthProviders,
 		ExtServices:          pr.ExternalServices,

@@ -84,6 +84,24 @@ func getSiteActivityJSON() (*json.RawMessage, error) {
 	return &message, nil
 }
 
+func getCodeIntelUsageJSON() (*json.RawMessage, error) {
+	days, weeks, months := 2, 1, 1
+	codeIntelUsage, err := usagestats.GetCodeIntelUsageStatistics(context.Background(), &usagestats.CodeIntelUsageStatisticsOptions{
+		DayPeriods:   &days,
+		WeekPeriods:  &weeks,
+		MonthPeriods: &months,
+	})
+	if err != nil {
+		return nil, err
+	}
+	contents, err := json.Marshal(codeIntelUsage)
+	if err != nil {
+		return nil, err
+	}
+	message := json.RawMessage(contents)
+	return &message, nil
+}
+
 func updateURL(ctx context.Context) string {
 	return baseURL.String()
 }
@@ -124,6 +142,10 @@ func updateBody(ctx context.Context) (io.Reader, error) {
 	if err != nil {
 		logFunc("getSiteActivityJSON failed", "error", err)
 	}
+	codeIntelUsage, err := getCodeIntelUsageJSON()
+	if err != nil {
+		logFunc("getCodeIntelUsageJSON failed", "error", err)
+	}
 	initAdminEmail, err := db.UserEmails.GetInitialSiteAdminEmail(ctx)
 	if err != nil {
 		logFunc("db.UserEmails.GetInitialSiteAdminEmail failed", "error", err)
@@ -143,6 +165,7 @@ func updateBody(ctx context.Context) (io.Reader, error) {
 		HasExtURL:            conf.UsingExternalURL(),
 		UniqueUsers:          int32(count),
 		Activity:             act,
+		CodeIntelUsage:       codeIntelUsage,
 		InitialAdminEmail:    initAdminEmail,
 		TotalUsers:           int32(totalUsers),
 		HasRepos:             hasRepos,
