@@ -84,12 +84,14 @@ func getSiteActivityJSON() (*json.RawMessage, error) {
 	return &message, nil
 }
 
-func getCodeIntelUsageJSON() (*json.RawMessage, error) {
+func getCodeIntelUsageJSON(includeEventCounts, includeEventLatencies bool) (*json.RawMessage, error) {
 	days, weeks, months := 2, 1, 1
 	codeIntelUsage, err := usagestats.GetCodeIntelUsageStatistics(context.Background(), &usagestats.CodeIntelUsageStatisticsOptions{
-		DayPeriods:   &days,
-		WeekPeriods:  &weeks,
-		MonthPeriods: &months,
+		DayPeriods:            &days,
+		WeekPeriods:           &weeks,
+		MonthPeriods:          &months,
+		IncludeEventCounts:    includeEventCounts,
+		IncludeEventLatencies: includeEventLatencies,
 	})
 	if err != nil {
 		return nil, err
@@ -142,7 +144,8 @@ func updateBody(ctx context.Context) (io.Reader, error) {
 	if err != nil {
 		logFunc("getSiteActivityJSON failed", "error", err)
 	}
-	codeIntelUsage, err := getCodeIntelUsageJSON()
+	// TODO - read site-admin flag for these values
+	codeIntelUsage, err := getCodeIntelUsageJSON(true, true)
 	if err != nil {
 		logFunc("getCodeIntelUsageJSON failed", "error", err)
 	}
