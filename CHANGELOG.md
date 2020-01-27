@@ -19,7 +19,6 @@ All notable changes to Sourcegraph are documented in this file.
 ### Changed
 
 - experimentalFeatures.splitSearchModes was removed as a site configuration option. It should be set in global/org/user settings.
-- The GraphQL mutation `previewCampaignPlan` has been renamed to `createCampaignPlan`. This mutation is part of Automation, which is still in beta and behind a feature flag and thus subject to possible breaking changes while we still work on it.
 - The GraphQL field `CampaignPlan.changesets` has been renamed to `CampaignPlan.changesetPlans` to make it more consistent with the `Campaign.changesetPlans` field.
 
 ### Fixed
